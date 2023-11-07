@@ -12,7 +12,7 @@ import { link, skaiGradientTheme } from '../styles/Theme';
 import GradientButton from '../components/GradientButton';
 import { CountryPicker } from 'react-native-country-codes-picker';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [show, setShow] = useState(false);
   const [countryCode, setCountryCode] = useState('');
 
@@ -58,12 +58,12 @@ const Login = () => {
               style={styles.input}
               placeholder="PIN"
             />
-             <Text style={styles.forgotPassword}>Forgot Password</Text>
+             <Text onPress={()=>(navigation.navigate('ForgotPin'))} style={styles.forgotPassword}>Forgot Password</Text>
           </View>
-          <TouchableOpacity style={styles.buttonContainer}>
+          <TouchableOpacity onPress={()=>(navigation.navigate('ChatListBottom'))} style={styles.buttonContainer}>
             <GradientButton text={'Login'} />
           </TouchableOpacity>
-          <Text style={styles.loginText} onPress={() => console.log('go to login')}>
+          <Text style={styles.loginText} onPress={()=>(navigation.navigate('Signup'))}>
             Already have an account?{' '}
             <Text style={styles.loginLink}>Create Account</Text>
           </Text>

@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
  import {skaiGradientTheme} from '../styles/Theme'; // You may need to adjust the path for skaiGradientTheme
 import GradientButton from '../components/GradientButton';
 
-const Otp = () => {
+const Otp = ({navigation}) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
 
@@ -56,7 +56,7 @@ const Otp = () => {
             />
           ))}
         </View>
-        <TouchableOpacity style={{width:'100%' , marginVertical:40}}>
+        <TouchableOpacity onPress={()=>(navigation.navigate('Login'))} style={{width:'100%' , marginVertical:40}}>
 
         <GradientButton text={"Continue"}/>
         </TouchableOpacity>

@@ -14,20 +14,20 @@ const AttachmentModal = ({ modalVisible, closeModal }) => {
         <View style={styles.modalContent}>
           <Text style={styles.modalText}>Upload Attachments</Text>
         <View style={{display:'flex',gap:20}}>
-         <TouchableOpacity>
-         <View style={{display:'flex',flexDirection:'row' , justifyContent:'center',gap:20}}>
+         <TouchableOpacity >
+         <View style={{display:'flex',flexDirection:'row' , justifyContent:'space-between',gap:20}}>
             <Text>Document</Text>
             <DocIcon name='text-document' size={18} color='white' />
          </View>
          </TouchableOpacity>
          <TouchableOpacity>
-         <View style={{display:'flex',flexDirection:'row' , justifyContent:'center',gap:20}}>
+         <View style={{display:'flex',flexDirection:'row' , justifyContent:'space-between',gap:20}}>
             <Text>Image</Text>
             <ImageIcon name='picture' size={18} color='white' />
          </View>
          </TouchableOpacity>
          <TouchableOpacity onPress={closeModal}>
-         <View style={{display:'flex',flexDirection:'row' , justifyContent:'center',gap:20}}>
+         <View style={{display:'flex',flexDirection:'row' , justifyContent:'space-between',gap:20}}>
             <Text style={{color:'red'}}>Close</Text>
             <ImageIcon name='close' size={18} color='red' />
          </View>

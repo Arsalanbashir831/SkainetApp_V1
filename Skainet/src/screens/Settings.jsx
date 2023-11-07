@@ -63,7 +63,7 @@ const SETTINGOPTIONS = [
   },
 ];
 
-const Settings = () => {
+const Settings = ({navigation}) => {
   const renderSettingOptions = ({ item }) => {
     return (
       <View style={{ marginBottom: 20 }}>
@@ -94,7 +94,7 @@ const Settings = () => {
       <Header name={'Settings'} />
       <View style={{ marginVertical: 20, paddingHorizontal: 15 }}>
       
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>(navigation.navigate('Profile'))}>
           <ProfileOptions name="Arsalan" img="https://dummyimage.com/300" passion="The Designer" />
         </TouchableOpacity>
 

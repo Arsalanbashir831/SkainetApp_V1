@@ -3,7 +3,7 @@ import {View, Text, Image, SafeAreaView, TextInput} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {settingsButton, skaiDark} from '../styles/Theme';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   return (
     <LinearGradient
       colors={skaiDark}
@@ -13,9 +13,9 @@ const Profile = () => {
       <View style={{padding: 20}}>
         {/* Header */}
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={{color: '#5398ff', fontSize: 17}}>Cancel</Text>
+          <Text onPress={()=>(navigation.goBack())} style={{color: '#5398ff', fontSize: 17}}>Cancel</Text>
           <Text style={{fontSize: 17, fontWeight: 'bold'}}>Edit Profile</Text>
-          <Text style={{color: '#5398ff', fontSize: 17}}>Done</Text>
+          <Text onPress={()=>(navigation.goBack())} style={{color: '#5398ff', fontSize: 17}}>Done</Text>
         </View>
         <View
           style={{

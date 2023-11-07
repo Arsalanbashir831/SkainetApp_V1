@@ -6,7 +6,7 @@ import { skaiDark } from '../styles/Theme'
 import User from '../components/User'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
-const ChatList = () => {
+const ChatList = ({navigation}) => {
 
   const UserData =[{
     id:1,
@@ -64,13 +64,11 @@ const ChatList = () => {
       msg:'Hi guys', 
       time:'12/12/21'
   }
-  
 
 ]
 
   return (
     <>
-
       <LinearGradient style={{flex:1,padding:10}} colors={[...skaiDark]}
       start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 1 }}
@@ -88,7 +86,7 @@ const ChatList = () => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={(data) => (
          
-         <TouchableOpacity>
+         <TouchableOpacity onPress={()=>(navigation.navigate('Chat'))}  >
           <User name={data.item.name} img={data.item.img} msg={data.item.msg} time={data.item.time}/>
          </TouchableOpacity>
         )}
