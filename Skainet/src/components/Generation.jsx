@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import Picture from 'react-native-vector-icons/AntDesign';
 
-const Generation = ({ onSelectGeneration }) => {
+const Generation = ({ onSelectGeneration , onSelectCollaborators }) => {
   const generationType = [
     {
       name: 'SKAI',
@@ -29,6 +29,10 @@ const Generation = ({ onSelectGeneration }) => {
     onSelectGeneration(name);
   };
 
+  const handleCollaborators = (name) => {
+    onSelectCollaborators(name);
+  };
+
   return (
     <View
       style={{
@@ -48,7 +52,7 @@ const Generation = ({ onSelectGeneration }) => {
                 paddingHorizontal: 10,
               }}
               key={index}
-              onPress={() => handleGenerationSelection(element)}
+              onPress={() => handleCollaborators(element)}
             >
               <View
                 style={{

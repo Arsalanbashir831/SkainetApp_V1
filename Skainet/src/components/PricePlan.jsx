@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
-import Check from 'react-native-vector-icons/AntDesign';
+import Check from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from 'react-native-linear-gradient';
 import { buttonGradient } from '../styles/Theme';
 
@@ -48,18 +48,18 @@ const PricePlan = () => {
           }}
         >
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{plans[i].title}</Text>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' , color:'white' }}>{plans[i].title}</Text>
             <LinearGradient
               colors={selectedPlan === plans[i].id ? buttonGradient : ['black', 'black']}
               style={{ borderWidth: 1, padding: 10, borderRadius: 20 }}
             >
               {selectedPlan === plans[i].id ? (
-                <Check name="check" size={10} color={selectedPlan ? 'white' : 'lightgray'} />
+                <Check name="check" size={14}  color={selectedPlan ? 'white' : 'lightgray'} />
               ) : null}
             </LinearGradient>
           </View>
-          <Text>{plans[i].price}</Text>
-          <Text>{plans[i].description}</Text>
+          <Text style={{color:'white'}}>{plans[i].price}</Text>
+          <Text style={{color:'white'}}>{plans[i].description}</Text>
         </View>
       </TouchableOpacity>
     );

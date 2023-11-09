@@ -10,7 +10,7 @@ const Header = ({ name}) => {
       <Icon   name='left' size={20} color='white' />
       </TouchableOpacity>
       
-      <Text style={{fontSize:20, fontWeight:'bold',flex:2}} >{name}</Text>
+      <Text style={{fontSize:20, fontWeight:'bold',flex:2 , color:'white'}} >{name}</Text>
     </View>
   )
 }

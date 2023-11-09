@@ -23,7 +23,7 @@ const SettingOptions = ({ name, icon ,isLast }) => {
         marginVertical:2
       }}
     >
-      <Text style={{ fontSize: 20 }}>{name}</Text>
+      <Text style={{ fontSize: 20 , color:'white' }}>{name}</Text>
       {icon === '' ? (
         <Switch
           trackColor={{ false: '#767577', true: '#1B69DD'}}

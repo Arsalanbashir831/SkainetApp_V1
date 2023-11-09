@@ -11,7 +11,7 @@ const GradientButton = ({text,navigation}) => {
     <LinearGradient style={{padding:12,borderRadius:15}}  
       start={{ x: 1, y: 0  }} end={{ x: 0.1, y: 1 }}
     colors={[...buttonGradient]}>
-      <Text style={{textAlign:'center',fontWeight:'bold' , fontSize:20}}>{text}</Text>  
+      <Text style={{textAlign:'center',fontWeight:'bold' , fontSize:20 , color:'white'}}>{text}</Text>  
     </LinearGradient>
   
   )

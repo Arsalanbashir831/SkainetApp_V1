@@ -1,25 +1,46 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/AntDesign'
-const User = ({ img, name, msg,time }) => {
+import Icon from 'react-native-vector-icons/AntDesign';
+import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
+import DelIcon from 'react-native-vector-icons/AntDesign'
+import { TouchableWithoutFeedback } from 'react-native';
+const User = ({ img, name, msg, time }) => {
+  const leftSwipe = () => {
+    return (
+      <View style={styles.leftSwipeContainer}>
+      <DelIcon onPress={()=>console.log('Delete Button Clicked')} style={styles.deleteText} name='delete' size={18} color='white'></DelIcon>
+        
+      </View>
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.userInfoContainer}>
-        <Image style={styles.userImage} source={{ uri: img }} />
-        <View style={styles.userInfo}>
-          <Text style={styles.userName}>{name}</Text>
-          <Text style={styles.userMessage}>{msg}</Text>
+    <GestureHandlerRootView style={styles.rootView}>
+      <Swipeable  renderLeftActions={leftSwipe} overshootLeft={false}>
+      <TouchableWithoutFeedback onPress={() => console.log('onPress triggered'+name)}>
+        <View style={styles.container}>
+          <View style={styles.userInfoContainer}>
+            <Image style={styles.userImage} source={{ uri: img }} />
+            <View style={styles.userInfo}>
+              <Text style={styles.userName}>{name}</Text>
+              <Text style={styles.userMessage}>{msg.slice(0,16)}</Text>
+            </View>
+          </View>
+          <View style={styles.rightContainer}>
+            <Text>{time}</Text>
+            <Icon style={styles.arrow} name="right" size={20} color="white" />
+          </View>
         </View>
-      </View>
-      <View>
-      <Text>{time}</Text>
-    <Icon style={styles.arrow} name='right' size={20} color='white'></Icon>
-      </View>
-    </View>
+        </TouchableWithoutFeedback>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
+  rootView: {
+    flex: 1,
+  },
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -28,6 +49,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#8E8E93',
     borderBottomWidth: 1,
     paddingBottom: 10,
+    backgroundColor: 'transparent',
+    padding: 20,
   },
   userInfoContainer: {
     flexDirection: 'row',
@@ -52,7 +75,21 @@ const styles = StyleSheet.create({
   },
   arrow: {
     padding: 10,
-
+  },
+  leftSwipeContainer: {
+    height: '100%', // Match the height of the main container
+  
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deleteText: {
+    color: 'white',
+  backgroundColor:'red', padding:15,paddingVertical:20
+  },
+  rightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

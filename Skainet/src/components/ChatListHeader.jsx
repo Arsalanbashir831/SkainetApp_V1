@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { skaiDark, buttonGradient } from '../styles/Theme';
 import LinearGradient from 'react-native-linear-gradient';
-
+import AddUserIcon from 'react-native-vector-icons/AntDesign'
+import AddUserGroupIcon from 'react-native-vector-icons/AntDesign'
 const ChatListHeader = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const slideAnim = useState(new Animated.Value(0))[0];
@@ -53,14 +54,17 @@ const ChatListHeader = () => {
             },
           ]}
         >
-        <TouchableOpacity onPress={()=>setMenuVisible(false)}>
+        <TouchableOpacity style={{display:'flex',flexDirection:'row' , alignItems:'center' , justifyContent:'space-around'}} onPress={()=>setMenuVisible(false)}>
           <Text style={styles.popupMenuItem}>New Chat</Text>
+          <AddUserIcon name='adduser' size={17} color='white'></AddUserIcon>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>setMenuVisible(false)}>
+        <TouchableOpacity style={{display:'flex',flexDirection:'row' , alignItems:'center' , justifyContent:'space-around'}} onPress={()=>setMenuVisible(false)} >
           <Text style={styles.popupMenuItem}>New Group</Text>
+          <AddUserGroupIcon  name='addusergroup' size={17} color='white'></AddUserGroupIcon>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>setMenuVisible(false)}>
+        <TouchableOpacity style={{display:'flex',flexDirection:'row' , alignItems:'center' , justifyContent:'space-around' , gap:10}} onPress={()=>setMenuVisible(false)}>
           <Text style={styles.popupMenuItem}>Chat With SKAI</Text>
+          <Image style={{height:17 , width:17}} source={require('../../assets/ball_resize.png')}></Image>
         </TouchableOpacity>
         </Animated.View>
       )}

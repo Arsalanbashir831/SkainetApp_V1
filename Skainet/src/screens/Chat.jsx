@@ -16,13 +16,14 @@ import Send from 'react-native-vector-icons/Feather';
 import AttachmentModal from '../components/AttachmentModal';
 import Generation from '../components/Generation';
 import LinearGradient from 'react-native-linear-gradient';
-import {buttonGradient} from '../styles/Theme';
+import {buttonGradient, settingsButton} from '../styles/Theme';
 
 const Chat = () => {
   const [inputMsg, setInputMsg] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [genModalVisible, setGenModalVisible] = useState(false);
   const [genType, setGenType] = useState('');
+  const [selectedCollaborators, setSelectedCollaborators] = useState([]);
 
   const handleModalOpen = () => {
     setModalVisible(true);
@@ -33,108 +34,139 @@ const Chat = () => {
   };
 
   const InputHandling = text => {
-    if (text.includes('@') && inputMsg.length === 0) {
-      setGenModalVisible(true);
+    const words = text.split(' ');
+    const lastWord = words[words.length - 1];
+
+    if (lastWord.startsWith('@') && lastWord.trim().length > 1 && !text.endsWith(' ')) {
+        setGenModalVisible(true);
     } else {
-      setGenModalVisible(false);
+        setGenModalVisible(false);
     }
 
     setInputMsg(text);
-  };
+};
+
+
+  
   const handleKeyPress = ({nativeEvent}) => {
     if (nativeEvent.key === 'Backspace' && inputMsg.length === 0) {
       setGenType('');
+      setSelectedCollaborators([])
     }
   };
   const handleGenerationSelection = name => {
     setGenType('@' + name);
     setGenModalVisible(false);
   };
+  const handleCollaborators = (name) => {
+    if (!selectedCollaborators.includes(name)) {
+      setSelectedCollaborators((prevSelectedCollaborators) => [
+        ...prevSelectedCollaborators,
+        name,
+      ]);
+    }
+    setInputMsg((prevInputMsg) => {
+      return prevInputMsg ? prevInputMsg + " " + "@"+name : "@"+name;
+    });
+  };
+  
   const handleSend = () => {
     console.log('clicked');
   };
+
+  const SelectedTags = () => {
+    if (genType.length !== 0 ) {
+      return (
+        <TouchableOpacity onPress={() => setGenModalVisible(!genModalVisible)}
+          style={{
+            position: 'absolute',
+            left: 75,
+           
+            padding: 10,
+            zIndex: 1,
+            borderRadius: 8,
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 10,
+          }}
+        >
+          {genType.length !== 0 ? (
+            <LinearGradient style={{padding:10 , borderRadius:8}} colors={buttonGradient}>
+            <Text style={{ color: 'white' }}>{genType.length > 15 ? genType.slice(0, 8) : genType}</Text>
+             </LinearGradient>
+          ) : null}
+          
+        </TouchableOpacity>
+      );
+    }
+    return null;
+  };
+  
+  const getTextInputStyle = () => {
+    let paddingLeftValue = 10;
+    if (genType.length  <= 15  && genType != 0) {
+      paddingLeftValue = 95;
+    } else if (genType.length >= 15) {
+      paddingLeftValue = 100 ;
+    }
+  
+    return {
+      padding: 10,
+      borderWidth: 1,
+      borderColor: 'lightblue',
+      borderRadius: 5,
+      flex: 1,
+      marginLeft: 10,
+      color: 'white',
+      paddingLeft: paddingLeftValue,
+      paddingRight: 40,
+      
+    };
+  };
+  
+  
+
   return (
     <View style={styles.container}>
-      <ChatHeader />
-      <AttachmentModal
-        modalVisible={modalVisible}
-        closeModal={handleModalClose}
+    <ChatHeader />
+    <AttachmentModal modalVisible={modalVisible} closeModal={handleModalClose} />
+
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <TextMessage user={'Collaborator'} />
+      <TextMessage user={'OpenAI'} />
+      <TextMessage />
+    </ScrollView>
+    {/* Generation Option */}
+    {genModalVisible ? (
+      <Generation onSelectGeneration={handleGenerationSelection} onSelectCollaborators={handleCollaborators} />
+    ) : null}
+    <View style={styles.inputContainer}>
+      <TouchableOpacity style={styles.tagButton} onPress={() => setGenModalVisible(!genModalVisible)}>
+        <Image source={require('../../assets/tag.png')} style={styles.tagIcon} />
+      </TouchableOpacity>
+      <SelectedTags />
+
+      <TextInput
+        onChangeText={InputHandling}
+        onKeyPress={handleKeyPress}
+        value={inputMsg}
+        style={getTextInputStyle()}
+        multiline={true} // set multiline to true
+       
+        placeholder="Enter Message"
       />
 
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <TextMessage user={'Collaborator'} />
-        <TextMessage user={'OpenAI'} />
-        <TextMessage />
-      </ScrollView>
-      {/* Generation Option */}
-      {genModalVisible ? (
-        <Generation onSelectGeneration={handleGenerationSelection} />
-      ) : null}
-      <View style={styles.inputContainer}>
-        <TouchableOpacity
-          style={styles.tagButton}
-          onPress={() => setGenModalVisible(!genModalVisible)}>
-          <Image
-            source={require('../../assets/tag.png')}
-            style={styles.tagIcon}
-          />
+      {inputMsg.length === 0 ? (
+        <TouchableOpacity onPress={handleModalOpen} style={{ position: 'absolute', right: 23 }}>
+          <AddIcon name="plus" size={20} color="white" />
         </TouchableOpacity>
-        {genType.length != 0 ? (
-          <>
-            <LinearGradient
-              colors={buttonGradient}
-              style={{
-                position: 'absolute',
-                left: 75,
-                backgroundColor: 'black',
-                padding: 10,
-                zIndex: 1,
-                borderRadius: 8,
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setGenModalVisible(true);
-                }}>
-                <Text>{genType.length>15 ? genType.slice(0,8):genType}</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-          </>
-        ) : null}
-
-        <TextInput
-          onChangeText={InputHandling}
-          onKeyPress={handleKeyPress}
-          value={inputMsg}
-          style={{
-            padding: 10,
-            borderWidth: 1,
-            borderColor: 'lightblue',
-            borderRadius: 5,
-            flex: 1,
-            marginLeft: 10,
-            color: 'white',
-            paddingLeft:
-              genType.length<=15 && genType!=0? 95: genType.length>=15? 100 : 10,
-            paddingRight: 40,
-          }}
-          placeholder="Enter Message"
-        />
-
-        {inputMsg.length === 0 ? (
-          <TouchableOpacity
-            onPress={handleModalOpen}
-            style={{position: 'absolute', right: 23}}>
-            <AddIcon name="plus" size={20} color="white" />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={handleSend}
-            style={{position: 'absolute', right: 23}}>
-            <Send name="send" size={20} color="white" />
-          </TouchableOpacity>
-        )}
-      </View>
+      ) : (
+        <TouchableOpacity onPress={handleSend} style={{ position: 'absolute', right: 23 }}>
+          <Send name="send" size={20} color="white" />
+        </TouchableOpacity>
+      )}
     </View>
+  </View>
   );
 };
 

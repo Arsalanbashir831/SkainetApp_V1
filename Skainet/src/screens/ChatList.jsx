@@ -18,14 +18,14 @@ const ChatList = ({navigation}) => {
   {
     id:2,
       img : "https://dummyimage.com/300",
-      name :"Arsalan",
+      name :"Ahmed",
       msg:'Hi guys',
       time:'12/12/21' 
   },
   {
     id:3,
       img : "https://dummyimage.com/300",
-      name :"Arsalan",
+      name :"Abdullah",
       msg:'Hi guys ! how u all are doing ', 
       time:'12/12/21'
   }
@@ -86,9 +86,10 @@ const ChatList = ({navigation}) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={(data) => (
          
-         <TouchableOpacity onPress={()=>(navigation.navigate('Chat'))}  >
+    
           <User name={data.item.name} img={data.item.img} msg={data.item.msg} time={data.item.time}/>
-         </TouchableOpacity>
+     
+        
         )}
       />
     </View>

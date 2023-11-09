@@ -14,6 +14,11 @@ import Chat from './src/screens/Chat';
 import { MenuProvider } from 'react-native-popup-menu';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Plans from './src/screens/Plans';
+import Refer from './src/screens/Refer';
+import Privacy from './src/screens/Privacy';
+import Contact from './src/screens/Contact';
+import ChatStorage from './src/screens/ChatStorage';
+import Invite from './src/screens/Invite';
 const Stack = createNativeStackNavigator();
 const App = () => {
   return (
@@ -40,8 +45,14 @@ const App = () => {
         <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}} />
        
       </Stack.Navigator> */}
-<Plans></Plans>
-  
+{/* <Plans></Plans> */}
+{/* <Refer></Refer> */}
+{/* <Privacy></Privacy> */}
+{/* <Contact></Contact> */}
+{/* <ChatListBottom></ChatListBottom> */}
+{/* <ChatListBottom/> */}
+{/* <ChatStorage></ChatStorage> */}
+<Invite></Invite>
    </MenuProvider>
    </NavigationContainer>
    </>

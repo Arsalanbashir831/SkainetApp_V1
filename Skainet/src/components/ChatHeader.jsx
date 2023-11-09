@@ -51,13 +51,11 @@ const ChatHeader = () => {
         </MenuTrigger>
         <MenuOptions style={{ backgroundColor: '#26262E', padding: 10 }}>
           <MenuOption>
-            <Text style={{ color: 'white', fontSize: 16 }}>New Collaborator</Text>
+            <Text style={{ color: 'white', fontSize: 16 }}>Invite</Text>
           </MenuOption>
+         
           <MenuOption>
-            <Text style={{ color: 'white', fontSize: 16 }}>Share Chat</Text>
-          </MenuOption>
-          <MenuOption>
-            <Text style={{ color: 'red', fontSize: 16 }}>Delete Group</Text>
+            <Text style={{ color: 'red', fontSize: 16 }}>Delete</Text>
           </MenuOption>
         </MenuOptions>
       </Menu>
