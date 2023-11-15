@@ -6,15 +6,76 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
+  Modal,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { skaiGradientTheme,link } from '../styles/Theme';
+import { skaiGradientTheme, link } from '../styles/Theme';
 import GradientButton from '../components/GradientButton';
-import { CountryPicker } from 'react-native-country-codes-picker';
+import Icon from 'react-native-vector-icons/Feather';
+import axios from 'axios';
+import SuccessModal from '../components/SuccessModal';
 
-const Signup = ({navigation}) => {
-  const [show, setShow] = useState(false);
-  const [countryCode, setCountryCode] = useState('');
+const Signup = ({ navigation }) => {
+  const [isPasswordVisible, setPasswordVisibility] = useState(true);
+  const [err, setErr] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
+
+  const [userData, setUserData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
+
+  const handlePasswordVisibility = () => {
+    setPasswordVisibility(!isPasswordVisible);
+  };
+
+  const handlcChange = (text, fieldName) => {
+    setUserData({
+      ...userData,
+      [fieldName]: text,
+    });
+  };
+
+  const handleSignup = async () => {
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        'https://api.ilmoirfan.com/auth/email-signup',
+        {
+          email: userData.email,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          password: userData.password,
+        }
+      );
+
+      if (response.status === 200) {
+        setSuccessModalVisible(true);
+       
+      }
+    } catch (error) {
+      if (error.response) {
+        setErr(error.response.data.message);
+      } else {
+        setErr('Something went wrong');
+      }
+    } finally {
+    
+      setLoading(false);
+    }
+  };
+
+  const closeModal = () => {
+    setSuccessModalVisible(false);
+    navigation.navigate('Otp',{email:userData.email});
+    setUserData({ firstName: '', lastName: '', email: '', password: '' });
+  };
 
   return (
     <LinearGradient style={styles.container} colors={skaiGradientTheme}>
@@ -26,46 +87,47 @@ const Signup = ({navigation}) => {
           />
           <Text style={styles.title}>Sign Up</Text>
           <View style={styles.inputContainer}>
-            <View style={styles.phoneInputContainer}>
-             
-              <TouchableOpacity
-                onPress={() => setShow(true)}
-                style={styles.countryCodeButton}
-              >
-                <Text style={styles.countryCodeText}>
-                  {countryCode === '' ? '+1' : countryCode}
-                </Text>
-              </TouchableOpacity>
-            
+          <Text style={{color:'red' , fontWeight:'bold'}}>{err}</Text>
+            <View style={{ display: 'flex', flexDirection: 'row', flexGrow: 1, gap: 10 }}>
               <TextInput
-              
-                keyboardType="number-pad"
-                style={styles.phoneInput}
-                placeholder="Whatsapp phone number"
+                value={userData.firstName}
+                onChangeText={(text) => handlcChange(text, 'firstName')}
+                name='firstName'
+                placeholder='First Name'
+                style={{ width: '48%', borderWidth: 1, borderRadius: 10, padding: 10, borderColor: '#69698C66', backgroundColor: "#00000040", color: 'white' }}
               />
-                <CountryPicker
-                style={styles.countryPicker}
-                show={show}
-                onBackdropPress={() => setShow(false)}
-                pickerButtonOnPress={(item) => {
-                  setCountryCode(item.dial_code);
-                  setShow(false);
-                }}
+              <TextInput
+                value={userData.lastName}
+                onChangeText={(text) => handlcChange(text, 'lastName')}
+                placeholder='Last Name'
+                style={{ width: '48%', borderWidth: 1, borderRadius: 10, padding: 10, borderColor: '#69698C66', backgroundColor: "#00000040", color: 'white' }}
               />
             </View>
-            <TextInput 
-             
-            style={styles.input} placeholder="Email" />
             <TextInput
-              secureTextEntry={true}
-              style={styles.input}
-              placeholder="PIN"
+              value={userData.email}
+              onChangeText={(text) => handlcChange(text, 'email')}
+              name='email'
+              placeholder='Email'
+              style={{ borderWidth: 1, borderRadius: 10, padding: 10, borderColor: '#69698C66', backgroundColor: "#00000040", color: 'white' }}
             />
+            <View style={{ display: 'flex', flexDirection: 'row', flexGrow: 1, gap: 10 }}>
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', borderColor: '#69698C66', backgroundColor: "#00000040", borderWidth: 1, borderRadius: 10 }}>
+                <TextInput
+                  value={userData.password}
+                  onChangeText={(text) => handlcChange(text, 'password')}
+                  name='password'
+                  secureTextEntry={isPasswordVisible}
+                  placeholder='Password'
+                  style={{ width: '80%', padding: 10, color: 'white' }}
+                />
+                <Icon onPress={handlePasswordVisibility} name={isPasswordVisible ? 'eye-off' : 'eye'} color={'white'} size={17} />
+              </View>
+            </View>
           </View>
-          <TouchableOpacity style={styles.buttonContainer} onPress={()=>(navigation.navigate('Otp'))}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleSignup}>
             <GradientButton text={'Signup'} />
           </TouchableOpacity>
-          <Text style={styles.loginText} onPress={()=>(navigation.navigate('Login'))}>
+          <Text style={styles.loginText} onPress={() => (navigation.navigate('Login'))}>
             Already have an account?{' '}
             <Text style={styles.loginLink}>Login</Text>
           </Text>
@@ -77,10 +139,18 @@ const Signup = ({navigation}) => {
           </Text>
         </View>
       </View>
+
+      {/* Loading Animation */}
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size='large' color='white' />
+        </View>
+      )}
+      <SuccessModal btnText={'Verify Email'} text={'Signup'} visible={successModalVisible} onClose={closeModal} closeModal={closeModal}/>
+
     </LinearGradient>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -105,7 +175,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   buttonContainer: {
-    marginVertical: 10,
+    marginVertical: 15,
     width: '100%',
   },
   loginText: {
@@ -123,6 +193,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 10,
+    display:'flex',
+    gap:15,
+    width:'100%'
   },
   phoneInputContainer: {
     flexDirection: 'row',
@@ -179,6 +252,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 25,
   },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+ 
+  
 });
 
 export default Signup;

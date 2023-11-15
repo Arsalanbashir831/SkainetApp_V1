@@ -19,13 +19,19 @@ import Privacy from './src/screens/Privacy';
 import Contact from './src/screens/Contact';
 import ChatStorage from './src/screens/ChatStorage';
 import Invite from './src/screens/Invite';
+import Storage from './src/screens/Storage';
+import FAQ from './src/screens/FAQ';
+import RateApp from './src/screens/RateApp';
+import SkaiTitle from './src/screens/SkaiTitle';
+
 const Stack = createNativeStackNavigator();
+
 const App = () => {
   return (
    <>
    <NavigationContainer>
    <MenuProvider>
-   {/* <Stack.Navigator
+   <Stack.Navigator
             initialRouteName="Splash"
             screenOptions={{
               stackAnimation: 'slide_from_right', // Slide in from the right
@@ -43,16 +49,21 @@ const App = () => {
         <Stack.Screen name="ChatListBottom" component={ChatListBottom} options={{headerShown:false}} />
         <Stack.Screen name="Chat" component={Chat} options={{headerShown:false}} />
         <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}} />
+        <Stack.Screen name="Plans" component={Plans} options={{headerShown:false}} />
+        <Stack.Screen name="Refer" component={Refer} options={{headerShown:false}} />
+        <Stack.Screen name="Privacy" component={Privacy} options={{headerShown:false}} />
+        <Stack.Screen name="Contact" component={Contact} options={{headerShown:false}} />
+        <Stack.Screen name="Storage" component={Storage} options={{headerShown:false}} />
+        <Stack.Screen name="FAQ" component={FAQ} options={{headerShown:false}} />
+        <Stack.Screen name="Ratings" component={RateApp} options={{headerShown:false}} />
+        <Stack.Screen name="Support" component={Contact} options={{headerShown:false}} />
+     
+        <Stack.Screen name="ChatStorage" component={ChatStorage} options={{headerShown:false}} />
+        <Stack.Screen name="Invite" component={Invite} options={{headerShown:false}} />
+        <Stack.Screen name="SkaiTitle" component={SkaiTitle} options={{headerShown:false}} />
        
-      </Stack.Navigator> */}
-{/* <Plans></Plans> */}
-{/* <Refer></Refer> */}
-{/* <Privacy></Privacy> */}
-{/* <Contact></Contact> */}
-{/* <ChatListBottom></ChatListBottom> */}
-{/* <ChatListBottom/> */}
-{/* <ChatStorage></ChatStorage> */}
-<Invite></Invite>
+      </Stack.Navigator>
+
    </MenuProvider>
    </NavigationContainer>
    </>

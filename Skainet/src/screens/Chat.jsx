@@ -18,7 +18,9 @@ import Generation from '../components/Generation';
 import LinearGradient from 'react-native-linear-gradient';
 import {buttonGradient, settingsButton} from '../styles/Theme';
 
-const Chat = () => {
+const Chat = ({route}) => {
+  const chatId = route.params.chatId; 
+
   const [inputMsg, setInputMsg] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [genModalVisible, setGenModalVisible] = useState(false);
@@ -128,14 +130,25 @@ const Chat = () => {
 
   return (
     <View style={styles.container}>
-    <ChatHeader />
+    <ChatHeader chatId={chatId} />
+    
+    
     <AttachmentModal modalVisible={modalVisible} closeModal={handleModalClose} />
-
+    
+    
+    
     <ScrollView contentContainerStyle={styles.scrollView}>
       <TextMessage user={'Collaborator'} />
       <TextMessage user={'OpenAI'} />
       <TextMessage />
     </ScrollView>
+
+
+
+
+
+
+{/* Input Message Field Component */}
     {/* Generation Option */}
     {genModalVisible ? (
       <Generation onSelectGeneration={handleGenerationSelection} onSelectCollaborators={handleCollaborators} />
@@ -167,6 +180,8 @@ const Chat = () => {
       )}
     </View>
   </View>
+
+
   );
 };
 

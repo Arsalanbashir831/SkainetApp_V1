@@ -22,7 +22,7 @@ const Contact = () => {
           <TextInput
             style={styles.textArea}
             multiline
-            numberOfLines={6}
+            numberOfLines={4}
             onChangeText={setText}
             value={text}
             placeholder="Enter your message here"

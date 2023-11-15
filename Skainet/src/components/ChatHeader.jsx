@@ -1,18 +1,24 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Option from 'react-native-vector-icons/SimpleLineIcons';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { useNavigation } from '@react-navigation/native';
+import useFetchChat from '../CustomHooks/FetchChat';
+import useGetUserToken from '../CustomHooks/GetUserToken';
 
-const ChatHeader = () => {
+
+const ChatHeader = ({chatId}) => {
   const navigation = useNavigation();
+
+  const handleInviteOption = () => {
+    navigation.navigate('Invite');
+  };
+
+  const handleDeleteOption = () => {
+    // Handle delete logic
+  };
+
   return (
     <View
       style={{
@@ -41,20 +47,21 @@ const ChatHeader = () => {
           source={{ uri: 'https://dummyimage.com/300' }}
         />
       </View>
-      <View>
-        <Text style={{ fontWeight: 'bold', fontSize: 17 }}>My Friend Chat</Text>
-        <Text>Ana,John,Mary</Text>
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate('ChatStorage')}>
+        <View>
+          <Text style={{ fontWeight: 'bold', fontSize: 17 }}>My Friend Chat</Text>
+          <Text>Ana,John,Mary</Text>
+        </View>
+      </TouchableOpacity>
       <Menu>
         <MenuTrigger>
           <Option name='options-vertical' size={20} color='white' />
         </MenuTrigger>
         <MenuOptions style={{ backgroundColor: '#26262E', padding: 10 }}>
-          <MenuOption>
+          <MenuOption onSelect={handleInviteOption}>
             <Text style={{ color: 'white', fontSize: 16 }}>Invite</Text>
           </MenuOption>
-         
-          <MenuOption>
+          <MenuOption onSelect={handleDeleteOption}>
             <Text style={{ color: 'red', fontSize: 16 }}>Delete</Text>
           </MenuOption>
         </MenuOptions>

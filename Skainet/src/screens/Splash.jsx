@@ -3,11 +3,18 @@ import React,{useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import skaiGradientTheme  from '../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Splash = () => {
   const navigation = useNavigation();
+  
   useEffect(() => {
-    const redirect = setTimeout(() => {
-      navigation.navigate('OnBoard'); // Replace 'Onboarding' with the name of your onboarding screen
+    const redirect =  setTimeout( async ()  => {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+    navigation.navigate('ChatListBottom');
+      } else{
+        navigation.navigate('OnBoard'); 
+      }
     }, 3000);
 
     return () => clearTimeout(redirect);

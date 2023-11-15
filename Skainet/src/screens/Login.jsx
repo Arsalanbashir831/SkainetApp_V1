@@ -6,16 +6,66 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
+
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { link, skaiGradientTheme } from '../styles/Theme';
 import GradientButton from '../components/GradientButton';
 import { CountryPicker } from 'react-native-country-codes-picker';
-
+import Icon from 'react-native-vector-icons/Feather'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import SuccessModal from '../components/SuccessModal';
 const Login = ({navigation}) => {
-  const [show, setShow] = useState(false);
-  const [countryCode, setCountryCode] = useState('');
 
+const [authData, setAuthData] = useState({
+    email: '',
+    password: '',
+})
+const [successModalVisible, setSuccessModalVisible] = useState(false);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState('');
+
+const handlcChange = (text, fieldName) => {
+  setAuthData({
+    ...authData,
+    [fieldName]: text,
+  });
+};
+const handleLogin = async () => {
+  try {
+    setLoading(true);
+    const response = await axios.post(
+      "https://api.ilmoirfan.com/auth/login",
+      {
+        email: authData.email,
+        password: authData.password,
+      }
+    );
+
+    if (response.status === 200) {
+      setSuccessModalVisible(true);
+      const authToken = response.data.token;
+
+      await AsyncStorage.setItem("token", authToken);
+      
+    }
+    
+  } catch (e) {
+    setError('Invalid Credentials');
+  }
+  finally{  
+    setLoading(false);
+  }
+}
+
+const closeModal = async () => {
+
+  navigation.reset({ index: 0, routes: [{ name: "ChatListBottom" }] });
+  setSuccessModalVisible(false);
+  setAuthData({ email: '', password: '' });
+};
   return (
     <LinearGradient style={styles.container} colors={skaiGradientTheme}>
       <View style={styles.contentContainer}>
@@ -26,41 +76,24 @@ const Login = ({navigation}) => {
           />
           <Text style={styles.title}>Login</Text>
           <View style={styles.inputContainer}>
-            <View style={styles.phoneInputContainer}>
-             
-              <TouchableOpacity
-                onPress={() => setShow(true)}
-                style={styles.countryCodeButton}
-              >
-                <Text style={styles.countryCodeText}>
-                  {countryCode === '' ? '+1' : countryCode}
-                </Text>
-              </TouchableOpacity>
-              <CountryPicker
-                style={styles.countryPicker}
-                show={show}
-                onBackdropPress={() => setShow(false)}
-                pickerButtonOnPress={(item) => {
-                  setCountryCode(item.dial_code);
-                  setShow(false);
-                }}
-              />
-              <TextInput
-              
-                keyboardType="number-pad"
-                style={styles.phoneInput}
-                placeholder="Whatsapp phone number"
-              />
-            </View>
-          
-            <TextInput
-              secureTextEntry={true}
-              style={styles.input}
-              placeholder="PIN"
+          <Text style={{color:'red', fontWeight:'bold' , fontSize:20}}>{error}</Text>
+          <TextInput
+              value={authData.email}
+              onChangeText={(text) => handlcChange(text, 'email')}
+              style={{backgroundColor:'#00000040' , padding:10 , borderColor:'#69698C66' , backgroundColor:"#00000040",borderWidth:1 , borderRadius:10 }}
+              placeholder="Email"
             />
-             <Text onPress={()=>(navigation.navigate('ForgotPin'))} style={styles.forgotPassword}>Forgot Password</Text>
+           <View style={{width:'100%', display:'flex' , flexDirection:'row' , alignItems:'center' , borderColor:'#69698C66' , backgroundColor:"#00000040",borderWidth:1 , borderRadius:10 }}>
+        <TextInput 
+        value={authData.password}
+        onChangeText={(text) => handlcChange(text, 'password')}
+        secureTextEntry={true} placeholder='Password' style={{ width:'90%',   padding:10,color:'white'}}/>
+      <Icon  name='eye' color={'white'} size={17}/>
+       </View>
+       
+         <Text onPress={()=>(navigation.navigate('ForgotPin'))} style={styles.forgotPassword}>Forgot Password</Text>
           </View>
-          <TouchableOpacity onPress={()=>(navigation.navigate('ChatListBottom'))} style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleLogin} style={styles.buttonContainer}>
             <GradientButton text={'Login'} />
           </TouchableOpacity>
           <Text style={styles.loginText} onPress={()=>(navigation.navigate('Signup'))}>
@@ -68,6 +101,12 @@ const Login = ({navigation}) => {
             <Text style={styles.loginLink}>Create Account</Text>
           </Text>
         </View>
+        {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size='large' color='white' />
+        </View>
+      )}
+      <SuccessModal visible={successModalVisible} text={'Login'} onClose={closeModal} closeModal={closeModal} btnText={'Go to Chats'}/>
      
       </View>
     </LinearGradient>
@@ -121,6 +160,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 10,
+    display:'flex',
+    gap:10
   },
   phoneInputContainer: {
     flexDirection: 'row',
@@ -159,7 +200,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
       color: 'white',
-      backgroundColor: '#121212',
+      backgroundColor: '#00000040',
     },
     line: {
       backgroundColor: '#8222CD',
@@ -172,10 +213,16 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#69698C66',
+    borderColor: '#00000040',
     borderRadius: 8,
     marginVertical: 10,
     paddingHorizontal: 25,
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 

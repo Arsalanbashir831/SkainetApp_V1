@@ -4,20 +4,22 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
 import DelIcon from 'react-native-vector-icons/AntDesign'
 import { TouchableWithoutFeedback } from 'react-native';
-const User = ({ img, name, msg, time }) => {
-  const leftSwipe = () => {
+import { useNavigation } from '@react-navigation/native';
+
+const User = ({ img, name, msg, time , id}) => {
+  const navigation = useNavigation();
+  const rightSwipe = () => {
     return (
       <View style={styles.leftSwipeContainer}>
       <DelIcon onPress={()=>console.log('Delete Button Clicked')} style={styles.deleteText} name='delete' size={18} color='white'></DelIcon>
-        
       </View>
     );
   };
 
   return (
     <GestureHandlerRootView style={styles.rootView}>
-      <Swipeable  renderLeftActions={leftSwipe} overshootLeft={false}>
-      <TouchableWithoutFeedback onPress={() => console.log('onPress triggered'+name)}>
+      <Swipeable  renderRightActions={rightSwipe} overshootRight={false}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate('Chat',{chatId:id}) }>
         <View style={styles.container}>
           <View style={styles.userInfoContainer}>
             <Image style={styles.userImage} source={{ uri: img }} />
@@ -28,7 +30,7 @@ const User = ({ img, name, msg, time }) => {
           </View>
           <View style={styles.rightContainer}>
             <Text>{time}</Text>
-            <Icon style={styles.arrow} name="right" size={20} color="white" />
+            {/* <Icon style={styles.arrow} name="right" size={20} color="white" /> */}
           </View>
         </View>
         </TouchableWithoutFeedback>
@@ -46,9 +48,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 15,
-    borderBottomColor: '#8E8E93',
-    borderBottomWidth: 1,
-    paddingBottom: 10,
+
+    paddingBottom: 2,
     backgroundColor: 'transparent',
     padding: 20,
   },
