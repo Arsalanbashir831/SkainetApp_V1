@@ -46,7 +46,7 @@ const Chat = ({route}) => {
 
   const SendMessage = () => {
     console.log('Msg Send to server');
-    console.log("-----",genType);
+    // console.log("-----",genType);
     if (ws.readyState === 0) {
       ws.onopen = () => {
         ws.send(
@@ -56,6 +56,8 @@ const Chat = ({route}) => {
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
+    setInputMsg("")
+    
   };
 
   const fetchInitialMessages = () => {
@@ -82,7 +84,7 @@ const Chat = ({route}) => {
      
       try {
         const response = JSON.parse(e.data);
-        // Add null checks for response and its properties
+     
         if (response && response.message === undefined) {
           setSocketData((prevSocketData) => [
             ...prevSocketData,
