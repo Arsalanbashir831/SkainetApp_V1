@@ -7,10 +7,11 @@ import {
   Image,
   StyleSheet,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState,useRef} from 'react';
 import ChatHeader from '../components/ChatHeader';
-import TextMessage from '../components/TextMessage';
+
 import AddIcon from 'react-native-vector-icons/Entypo';
 import Send from 'react-native-vector-icons/Feather';
 import AttachmentModal from '../components/AttachmentModal';
@@ -18,14 +19,94 @@ import Generation from '../components/Generation';
 import LinearGradient from 'react-native-linear-gradient';
 import {buttonGradient, settingsButton} from '../styles/Theme';
 
+import useUserDetails from '../CustomHooks/GetUserDetails';
+import useGetUserToken from '../CustomHooks/GetUserToken';
+import FetchMessage from '../Websocket/FetchMessage';
+
+import Message from '../components/TextMessage';
+import sendMessage from '../Websocket/SendMessage';
+import useFetchChat from '../CustomHooks/FetchChat';
+
 const Chat = ({route}) => {
-  const chatId = route.params.chatId; 
+  const chatId = route.params.chatId;
+  const token = useGetUserToken();
+  const sender = useUserDetails(token);
+  const {Collaborator} = useFetchChat(token)
 
   const [inputMsg, setInputMsg] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [genModalVisible, setGenModalVisible] = useState(false);
   const [genType, setGenType] = useState('');
   const [selectedCollaborators, setSelectedCollaborators] = useState([]);
+  const [socketData, setSocketData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const scrollViewRef = useRef(null);
+// console.log(Collaborator);
+  const ws = new WebSocket(`wss://api.ilmoirfan.com/ws/chat/${chatId}/`);
+
+  const SendMessage = () => {
+    console.log('Msg Send to server');
+    console.log("-----",genType);
+    if (ws.readyState === 0) {
+      ws.onopen = () => {
+        ws.send(
+          sendMessage(genType, inputMsg, sender?.userDetails?.id, chatId),
+        );
+      };
+    } else {
+      console.error('WebSocket is not open. Message not sent.');
+    }
+  };
+
+  const fetchInitialMessages = () => {
+    if (ws.readyState === WebSocket.OPEN) {
+      console.log('Ready:' + ws.readyState);
+      ws.send(FetchMessage(sender?.userDetails?.id, chatId));
+    } else {
+      console.error('WebSocket is not open. Initial message not sent.');
+    }
+  };
+
+  useEffect(()=>{
+    ws.onopen = () => {
+      // connection opened
+      console.log('WebSocket connection opened');
+      fetchInitialMessages();
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+      }
+    };
+
+    ws.onmessage = e => {
+      setLoading(false);
+     
+      try {
+        const response = JSON.parse(e.data);
+        // Add null checks for response and its properties
+        if (response && response.message === undefined) {
+          setSocketData((prevSocketData) => [
+            ...prevSocketData,
+            ...(response.messages || []),
+          ]);
+        } else if (response) {
+          setSocketData((prevSocketData) => [
+            ...prevSocketData,
+            response.message,
+          ]);
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+      ws.onerror = e => {
+        // an error occurred
+        console.log(e.message);
+      };
+
+     
+    };
+  },[])
+  
+
 
   const handleModalOpen = () => {
     setModalVisible(true);
@@ -39,79 +120,80 @@ const Chat = ({route}) => {
     const words = text.split(' ');
     const lastWord = words[words.length - 1];
 
-    if (lastWord.startsWith('@') && lastWord.trim().length > 1 && !text.endsWith(' ')) {
-        setGenModalVisible(true);
+    if (
+      lastWord.startsWith('@') &&
+      lastWord.trim().length > 1 &&
+      !text.endsWith(' ')
+    ) {
+      setGenModalVisible(true);
     } else {
-        setGenModalVisible(false);
+      setGenModalVisible(false);
     }
 
     setInputMsg(text);
-};
+  };
 
-
-  
   const handleKeyPress = ({nativeEvent}) => {
     if (nativeEvent.key === 'Backspace' && inputMsg.length === 0) {
       setGenType('');
-      setSelectedCollaborators([])
+      setSelectedCollaborators([]);
     }
   };
   const handleGenerationSelection = name => {
     setGenType('@' + name);
     setGenModalVisible(false);
   };
-  const handleCollaborators = (name) => {
+  const handleCollaborators = name => {
     if (!selectedCollaborators.includes(name)) {
-      setSelectedCollaborators((prevSelectedCollaborators) => [
+      setSelectedCollaborators(prevSelectedCollaborators => [
         ...prevSelectedCollaborators,
         name,
       ]);
     }
-    setInputMsg((prevInputMsg) => {
-      return prevInputMsg ? prevInputMsg + " " + "@"+name : "@"+name;
+    setInputMsg(prevInputMsg => {
+      return prevInputMsg ? prevInputMsg + ' ' + '@' + name : '@' + name;
     });
-  };
-  
-  const handleSend = () => {
-    console.log('clicked');
   };
 
   const SelectedTags = () => {
-    if (genType.length !== 0 ) {
+    if (genType.length !== 0) {
       return (
-        <TouchableOpacity onPress={() => setGenModalVisible(!genModalVisible)}
+        <TouchableOpacity
+          onPress={() => setGenModalVisible(!genModalVisible)}
           style={{
             position: 'absolute',
             left: 75,
-           
+
             padding: 10,
             zIndex: 1,
             borderRadius: 8,
             display: 'flex',
             flexDirection: 'row',
             gap: 10,
-          }}
-        >
+          }}>
           {genType.length !== 0 ? (
-            <LinearGradient style={{padding:10 , borderRadius:8}} colors={buttonGradient}>
-            <Text style={{ color: 'white' }}>{genType.length > 15 ? genType.slice(0, 8) : genType}</Text>
-             </LinearGradient>
+            <LinearGradient
+              style={{padding: 10, borderRadius: 8}}
+              colors={buttonGradient}>
+              <Text style={{color: 'white'}}>
+                {genType.length > 15 ? genType.slice(0, 8) : genType}
+              </Text>
+            </LinearGradient>
           ) : null}
-          
         </TouchableOpacity>
       );
     }
     return null;
   };
-  
+
   const getTextInputStyle = () => {
     let paddingLeftValue = 10;
-    if (genType.length  <= 15  && genType != 0) {
+    if (genType.length <= 15 && genType != 0) {
       paddingLeftValue = 95;
     } else if (genType.length >= 15) {
-      paddingLeftValue = 100 ;
+      paddingLeftValue = 100;
     }
-  
+
     return {
       padding: 10,
       borderWidth: 1,
@@ -122,66 +204,100 @@ const Chat = ({route}) => {
       color: 'white',
       paddingLeft: paddingLeftValue,
       paddingRight: 40,
-      
     };
   };
-  
-  
+
+  const isSender = sender => (sender === 'OpenAI' ? 'OpenAI' : 'Collaborator');
+  const renderTextMessage = (msg, index) => (
+    <React.Fragment key={index}>
+      <Message
+        user={
+          sender?.userDetails?.first_name +
+            ' ' +
+            sender?.userDetails?.last_name ===
+          msg?.sender_details?.full_name
+            ? 'Owner'
+            : isSender(msg?.sender)
+        }
+        img={msg?.sender_details?.avatar}
+        msg={msg?.message}
+        name={msg?.sender_details?.full_name}
+        type={msg?.type}
+      />
+    </React.Fragment>
+  );
+
+  //  console.log(socketData);
 
   return (
     <View style={styles.container}>
-    <ChatHeader chatId={chatId} />
-    
-    
-    <AttachmentModal modalVisible={modalVisible} closeModal={handleModalClose} />
-    
-    
-    
-    <ScrollView contentContainerStyle={styles.scrollView}>
-      <TextMessage user={'Collaborator'} />
-      <TextMessage user={'OpenAI'} />
-      <TextMessage />
-    </ScrollView>
-
-
-
-
-
-
-{/* Input Message Field Component */}
-    {/* Generation Option */}
-    {genModalVisible ? (
-      <Generation onSelectGeneration={handleGenerationSelection} onSelectCollaborators={handleCollaborators} />
-    ) : null}
-    <View style={styles.inputContainer}>
-      <TouchableOpacity style={styles.tagButton} onPress={() => setGenModalVisible(!genModalVisible)}>
-        <Image source={require('../../assets/tag.png')} style={styles.tagIcon} />
-      </TouchableOpacity>
-      <SelectedTags />
-
-      <TextInput
-        onChangeText={InputHandling}
-        onKeyPress={handleKeyPress}
-        value={inputMsg}
-        style={getTextInputStyle()}
-        multiline={true} // set multiline to true
-       
-        placeholder="Enter Message"
+      <ChatHeader chatId={chatId} />
+      {loading && (
+        <>
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator color={'white'} size={50} />
+          </View>
+        </>
+      )}
+      <AttachmentModal
+        modalVisible={modalVisible}
+        closeModal={handleModalClose}
       />
 
-      {inputMsg.length === 0 ? (
-        <TouchableOpacity onPress={handleModalOpen} style={{ position: 'absolute', right: 23 }}>
-          <AddIcon name="plus" size={20} color="white" />
+      <ScrollView 
+       ref={scrollViewRef}
+      onContentSizeChange={() => {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+      }}
+      contentContainerStyle={styles.scrollView}>
+        {socketData?.map(renderTextMessage)}
+      </ScrollView>
+
+      {/* Input Message Field Component */}
+      {/* Generation Option */}
+      {genModalVisible ? (
+        <Generation
+          onSelectGeneration={handleGenerationSelection}
+          onSelectCollaborators={handleCollaborators}
+          collaborators ={Collaborator}
+        />
+      ) : null}
+      <View style={styles.inputContainer}>
+        <TouchableOpacity
+          style={styles.tagButton}
+          onPress={() => setGenModalVisible(!genModalVisible)}>
+          <Image
+            source={require('../../assets/tag.png')}
+            style={styles.tagIcon}
+          />
         </TouchableOpacity>
-      ) : (
-        <TouchableOpacity onPress={handleSend} style={{ position: 'absolute', right: 23 }}>
-          <Send name="send" size={20} color="white" />
-        </TouchableOpacity>
-      )}
+        <SelectedTags />
+
+        <TextInput
+          onChangeText={InputHandling}
+          onKeyPress={handleKeyPress}
+          value={inputMsg}
+          style={getTextInputStyle()}
+          multiline={true} // set multiline to true
+          placeholder="Enter Message"
+        />
+
+        {inputMsg.length === 0 ? (
+          <TouchableOpacity
+            onPress={handleModalOpen}
+            style={{position: 'absolute', right: 23}}>
+            <AddIcon name="plus" size={20} color="white" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={SendMessage}
+            style={{position: 'absolute', right: 23}}>
+            <Send name="send" size={20} color="white" />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
-  </View>
-
-
   );
 };
 

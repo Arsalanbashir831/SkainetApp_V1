@@ -24,6 +24,7 @@ const ChatList = () => {
   const filteredChats = chatData?.chats?.filter(chat =>
     chat.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  
 
   return (
     <>

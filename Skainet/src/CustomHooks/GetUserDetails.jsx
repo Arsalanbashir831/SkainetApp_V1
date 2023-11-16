@@ -4,6 +4,7 @@ function useUserDetails(authToken) {
   const [userDetails, setUserDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [ServerResponse , setServerResponse]= useState()
 
   useEffect(() => {
     async function fetchUserDetails() {
@@ -13,18 +14,26 @@ function useUserDetails(authToken) {
             Authorization: `Bearer ${authToken}`,
           },
         });
-        const data = await response.json();
-        setUserDetails(data);
-        setIsLoading(false);
+        console.log('Actual Response ',response.status);
+        if (response.status===200) {   
+          const data = await response.json();
+          setUserDetails(data);
+          setIsLoading(false);
+          setServerResponse(response.status)
+          
+        }
       } catch (error) {
         setError(error);
         setIsLoading(false);
       }
+      finally{
+         console.log(ServerResponse);
+      }
     }
 
     fetchUserDetails();
-  }, [authToken]);
+  }, [authToken,ServerResponse]);
 
-  return { userDetails, isLoading, error };
+  return { userDetails, isLoading, error, ServerResponse };
 }
 export default useUserDetails;

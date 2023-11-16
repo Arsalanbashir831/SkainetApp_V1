@@ -1,9 +1,10 @@
-// Import ScrollView from react-native
+
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import Picture from 'react-native-vector-icons/AntDesign';
 
-const Generation = ({ onSelectGeneration , onSelectCollaborators }) => {
+const Generation = ({ onSelectGeneration , onSelectCollaborators ,collaborators}) => {
+ 
   const generationType = [
     {
       name: 'SKAI',
@@ -20,10 +21,8 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators }) => {
       border: false,
     },
   ];
-  const Collaborator = [
-    'Arsalan', 'Ahmed', 'Abdullah', 'Malik Abdullah Mallik Chaudary Chaapra',
-    'John', 'Doe', 'Jane', 'Doe', 'Robert', 'Smith', 'Linda', 'Johnson', 'William', 'Brown'
-  ];
+ const Collaborator=collaborators
+//  console.log('----', collaborators);
 
   const handleGenerationSelection = (name) => {
     onSelectGeneration(name);
@@ -45,14 +44,14 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators }) => {
      <Text style={{fontSize:20,color:'white' , padding:10,textAlign:'center'}}>Collaborator</Text>
       <ScrollView style={{padding:10}} >
      
-        {Collaborator.map((element, index) => {
+        {Collaborator?.map((element, index) => {
           return (
             <TouchableOpacity
               style={{
                 paddingHorizontal: 10,
               }}
               key={index}
-              onPress={() => handleCollaborators(element)}
+              onPress={() => handleCollaborators(element.full_name)}
             >
               <View
                 style={{
@@ -64,7 +63,7 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators }) => {
                   gap: 20,
                 }}
               >
-                <Text style={{ fontSize: 18, color: 'white' }}>{element}</Text>
+                <Text style={{ fontSize: 18, color: 'white' }}>{element.full_name}</Text>
               </View>
             </TouchableOpacity>
           );

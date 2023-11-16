@@ -4,21 +4,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import skaiGradientTheme  from '../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useUserDetails from '../CustomHooks/GetUserDetails';
+import useGetUserToken from '../CustomHooks/GetUserToken';
+
 const Splash = () => {
   const navigation = useNavigation();
+  const token = useGetUserToken()
+const {ServerResponse} = useUserDetails(token)
   
   useEffect(() => {
     const redirect =  setTimeout( async ()  => {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-    navigation.navigate('ChatListBottom');
-      } else{
-        navigation.navigate('OnBoard'); 
-      }
-    }, 3000);
+    console.log(ServerResponse);
+    if (ServerResponse===200) {
+      navigation.navigate('ChatListBottom')
+    }else{
+      navigation.navigate('OnBoard')
+    }
+    }, 5000);
 
     return () => clearTimeout(redirect);
-  }, [navigation]);
+  }, [navigation,ServerResponse]);
     const svgLogo = require('../../assets/skainetAnime.gif');
   return (
     <LinearGradient

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 const useFetchChat = (authToken) => {
   const [chatData, setChatData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [Collaborator,setCollaborator] = useState(null)
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -22,6 +23,8 @@ const useFetchChat = (authToken) => {
         if (response) {
           
           setChatData(response);
+          // console.log("---------------",response?.chats[0]?.collaborators);
+          setCollaborator(response?.chats[0]?.collaborators)
         }
 
       } catch (error) {
@@ -34,7 +37,7 @@ const useFetchChat = (authToken) => {
   }, [authToken]);
 
  
-  return { chatData, isLoading, error };
+  return { chatData, Collaborator,isLoading, error };
 
 };
 

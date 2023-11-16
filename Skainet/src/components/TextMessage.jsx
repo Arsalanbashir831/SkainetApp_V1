@@ -1,72 +1,57 @@
 import { View, Text, Image } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { buttonGradient, skaiDark, skaiGradientTheme } from '../styles/Theme';
+import { buttonGradient } from '../styles/Theme';
 
-const TextMessage = ({ user, text, img }) => {
+const Message = ({ user, msg, img, name, type }) => {
+  const commonLinearGradientStyles = {
+    width: '80%',
+    padding: type === 'image' ? 5 : 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: user==='Collaborator'?10:0,
+  };
+
+  const renderCollaboratorMessage = () => (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10, padding: 10, width: '90%', justifyContent: 'flex-start' }}>
+      <View style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '20%' }}>
+        <Text style={{ textAlign: 'left' }}>{name}</Text>
+        <Image style={{ height: 50, width: 50, borderRadius: 30 }} source={{ uri: img }} />
+      </View>
+      <LinearGradient colors={['#3D3F47', '#3D3F47']} style={{ ...commonLinearGradientStyles }}>
+        <Text> {msg} </Text>
+      </LinearGradient>
+    </View>
+  );
+
+  const renderOtherMessage = () => (
+    <View style={{ flexDirection: user === 'Collaborator' ? 'row' : 'row-reverse', alignItems: 'center', gap: 10, marginTop: 10, padding: 10, width: '90%', alignSelf: user === 'Collaborator' ? 'flex-start' : 'flex-end' }}>
+      <View style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '20%', alignItems: 'center', justifyContent: 'center' }}>
+        <Text>{name}</Text>
+        <Image style={{ height: 50, width: 50, borderRadius: 30 }} source={{ uri: img }} />
+      </View>
+      <LinearGradient colors={['#3D3F47', '#3D3F47']} style={{ ...commonLinearGradientStyles, borderBottomLeftRadius: user !== 'Collaborator' ? 10 : 0, borderWidth: 1, borderColor: 'lightblue' }}>
+        <Text> {msg} </Text>
+      </LinearGradient>
+    </View>
+  );
+
   return (
     <>
-      {user === 'OpenAI' && (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10, padding:10 }}>
-       
-       
+      {(user === 'OpenAI') && (type === 'message' || type === 'image') && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10, padding: 10 }}>
           <Image style={{ height: 50, width: 50, borderRadius: 30 }} source={require('../../assets/ball.png')} />
-     
-          <LinearGradient
-            colors={buttonGradient}
-            style={{ width: '80%', padding: 10, borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomRightRadius: 10 }}
-          >
-            <Text>
-              {' '}
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat consequatur laudantium voluptatibus
-              tempore odit. Eaque incidunt provident corrupti illo eveniet itaque doloribus, earum, possimus atque
-              nobis, maiores tempore aspernatur saepe?{' '}
-            </Text>
+          <LinearGradient colors={buttonGradient} style={{ ...commonLinearGradientStyles }}>
+            {type === 'image' ? <Image style={{ height: 150, borderRadius: 10 }} source={{ uri: msg }} /> : <Text>{msg}</Text>}
           </LinearGradient>
         </View>
       )}
-      {user === 'Collaborator' && (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10 , padding:10}}>
-        <View style={{display:'flex',flexDirection:'column' , alignItems:'center' , gap:10}}>
-        <Text>Ana</Text>
-        <Image style={{ height: 50, width: 50, borderRadius: 30 }} source={{uri:'https://dummyimage.com/300'}} />
-        </View>
-         
-          <LinearGradient
-            colors={['#3D3F47','#3D3F47']}
-            style={{ width: '80%', padding: 10, borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomRightRadius: 10 }}
-          >
-            <Text>
-              {' '}
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat consequatur laudantium voluptatibus
-              tempore odit. Eaque incidunt provident corrupti illo eveniet itaque doloribus, earum, possimus atque
-              nobis, maiores tempore aspernatur saepe?{' '}
-            </Text>
-          </LinearGradient>
-        </View>
-      )}
-      {user != 'Collaborator'&& user !='OpenAI'  && (
-        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 10, marginTop: 10, padding:10 }}>
-        <View style={{display:'flex',flexDirection:'column' , alignItems:'center' , gap:10}}>
-        <Text>You</Text>
-        <Image style={{ height: 50, width: 50, borderRadius: 30 }} source={{uri:'https://dummyimage.com/300'}} />
-        </View>
-          <LinearGradient
-            colors={['#3D3F47','#3D3F47']}
-            style={{ width: '80%', padding: 10, borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomLeftRadius: 10 , borderWidth:1,borderColor:'lightblue' }}
-          >
-            <Text >
-            
-              {' '}
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat consequatur laudantium voluptatibus
-              tempore odit. Eaque incidunt provident corrupti illo eveniet itaque doloribus, earum, possimus atque
-              nobis, maiores tempore aspernatur saepe?{' '}
-            </Text>
-          </LinearGradient>
-        </View>
-      )}
+
+      {(user === 'Collaborator') && (type === 'message') && renderCollaboratorMessage()}
+
+      {(user !== 'Collaborator' && user !== 'OpenAI') && (type === 'message') && renderOtherMessage()}
     </>
   );
 };
 
-export default TextMessage;
+export default Message;
