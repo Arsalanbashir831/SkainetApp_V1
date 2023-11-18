@@ -23,6 +23,7 @@ import Storage from './src/screens/Storage';
 import FAQ from './src/screens/FAQ';
 import RateApp from './src/screens/RateApp';
 import SkaiTitle from './src/screens/SkaiTitle';
+import EmailInvite from './src/screens/EmailInvite';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +61,7 @@ const App = () => {
      
         <Stack.Screen name="ChatStorage" component={ChatStorage} options={{headerShown:false}} />
         <Stack.Screen name="Invite" component={Invite} options={{headerShown:false}} />
+        <Stack.Screen name="EmailInvite" component={EmailInvite} options={{headerShown:false}} />
         <Stack.Screen name="SkaiTitle" component={SkaiTitle} options={{headerShown:false}} />
        
       </Stack.Navigator>

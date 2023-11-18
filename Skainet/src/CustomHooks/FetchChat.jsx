@@ -25,6 +25,7 @@ const useFetchChat = (authToken) => {
           setChatData(response);
           // console.log("---------------",response?.chats[0]?.collaborators);
           setCollaborator(response?.chats[0]?.collaborators)
+          setIsLoading(false);
         }
 
       } catch (error) {

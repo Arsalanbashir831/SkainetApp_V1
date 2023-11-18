@@ -1,9 +1,23 @@
 
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import Picture from 'react-native-vector-icons/AntDesign';
+import useFetchChat from '../CustomHooks/FetchChat';
+import useGetUserToken from '../CustomHooks/GetUserToken';
 
-const Generation = ({ onSelectGeneration , onSelectCollaborators ,collaborators}) => {
+const Generation = ({ onSelectGeneration , onSelectCollaborators ,chatId}) => {
+ 
+  const token = useGetUserToken();
+  const {chatData, isLoading} = useFetchChat(token);
+  const [filteredChatData, setFilteredChatData] = useState(null);
+  const findChatById = () => {
+    setFilteredChatData(chatData?.chats?.filter(chat => chat.id === chatId)[0]);
+  };
+  useEffect(() => {
+    findChatById();
+  }, [chatData]);
+
+ 
  
   const generationType = [
     {
@@ -21,8 +35,7 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators ,collaborators}
       border: false,
     },
   ];
- const Collaborator=collaborators
-//  console.log('----', collaborators);
+
 
   const handleGenerationSelection = (name) => {
     onSelectGeneration(name);
@@ -44,7 +57,7 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators ,collaborators}
      <Text style={{fontSize:20,color:'white' , padding:10,textAlign:'center'}}>Collaborator</Text>
       <ScrollView style={{padding:10}} >
      
-        {Collaborator?.map((element, index) => {
+        {filteredChatData?.collaborators?.map((element, index) => {
           return (
             <TouchableOpacity
               style={{

@@ -40,12 +40,16 @@ const Chat = ({route}) => {
   const [selectedCollaborators, setSelectedCollaborators] = useState([]);
   const [socketData, setSocketData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [typingAnimation , setTypingAnimation] = useState(false)
   const scrollViewRef = useRef(null);
 // console.log(Collaborator);
   const ws = new WebSocket(`wss://api.ilmoirfan.com/ws/chat/${chatId}/`);
 
   const SendMessage = () => {
     console.log('Msg Send to server');
+    if (genType!='') {
+      setTypingAnimation(true)
+    }
     // console.log("-----",genType);
     if (ws.readyState === 0) {
       ws.onopen = () => {
@@ -68,10 +72,13 @@ const Chat = ({route}) => {
       console.error('WebSocket is not open. Initial message not sent.');
     }
   };
-
+const getCollaborator=()=>{
+  return Collaborator
+}
   useEffect(()=>{
     ws.onopen = () => {
       // connection opened
+      getCollaborator()      
       console.log('WebSocket connection opened');
       fetchInitialMessages();
       if (scrollViewRef.current) {
@@ -80,22 +87,30 @@ const Chat = ({route}) => {
     };
 
     ws.onmessage = e => {
+      
       setLoading(false);
+     
+  
      
       try {
         const response = JSON.parse(e.data);
-     
+        
         if (response && response.message === undefined) {
+         
           setSocketData((prevSocketData) => [
             ...prevSocketData,
             ...(response.messages || []),
           ]);
         } else if (response) {
+         
           setSocketData((prevSocketData) => [
             ...prevSocketData,
             response.message,
           ]);
+         setTypingAnimation(false)
         }
+        
+        
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
@@ -254,6 +269,9 @@ const Chat = ({route}) => {
       }}
       contentContainerStyle={styles.scrollView}>
         {socketData?.map(renderTextMessage)}
+        {typingAnimation && (<>
+          <Text style={{color:'white'}}>Typing .....</Text>
+        </>)}
       </ScrollView>
 
       {/* Input Message Field Component */}
@@ -263,6 +281,8 @@ const Chat = ({route}) => {
           onSelectGeneration={handleGenerationSelection}
           onSelectCollaborators={handleCollaborators}
           collaborators ={Collaborator}
+          chatId={chatId}
+          
         />
       ) : null}
       <View style={styles.inputContainer}>

@@ -14,6 +14,7 @@ const SkaiTitle = ({navigation}) => {
   const token = useGetUserToken()
   const {userDetails} = useUserDetails(token)
   const [socketData, setSocketData] = useState(null);
+  
   const senderId = userDetails?.id
 
   function generateRandomString() {

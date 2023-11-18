@@ -10,7 +10,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { skaiDark } from '../styles/Theme';
 
 
-const Invite = () => {
+const Invite = ({navigation,route }) => {
+  const {chatId}=route.params
   const [contactList, setContactList] = useState(null);
   const [checkedContacts, setCheckedContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -85,7 +86,7 @@ const Invite = () => {
             gap: 30,
           }}
         >
-          <TouchableOpacity style={{backgroundColor: '#2F2C3B'}}>
+          <TouchableOpacity onPress={()=>navigation.navigate('EmailInvite',{chatId:chatId})} style={{backgroundColor: '#2F2C3B'}}>
             <View
               style={{
                 display: 'flex',

@@ -27,7 +27,7 @@ const ChatHeader = ({chatId}) => {
 
   // console.log(filteredChatData[0].collaborators);
   const handleInviteOption = () => {
-    navigation.navigate('Invite');
+    navigation.navigate('Invite', {chatId: chatId});
   };
 
   const handleDeleteOption = () => {
@@ -61,7 +61,11 @@ const ChatHeader = ({chatId}) => {
           source={{uri: 'https://i.ibb.co/vBN55yc/ball.png'}}
         />
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('ChatStorage')}>
+      <TouchableOpacity onPress={() => navigation.navigate('ChatStorage',{
+        chatTitle:filteredChatData?.title,
+        collaborators:filteredChatData?.collaborators,
+        img:'https://i.ibb.co/vBN55yc/ball.png',
+      })}>
         <View>
           <Text style={{fontWeight: 'bold', fontSize: 17}}>{filteredChatData?.title.slice(0,27)}</Text>
           <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
