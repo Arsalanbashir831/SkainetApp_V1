@@ -59,7 +59,7 @@ const ChatList = () => {
             keyExtractor={item => item.id.toString()}
             renderItem={({item}) => (
               <User
-                name={item.title.slice(0, 24)}
+                name={item.title.slice(0, 24)+"..."}
                 img="https://i.ibb.co/vBN55yc/ball.png"
                 msg={item.role}
                 time=""

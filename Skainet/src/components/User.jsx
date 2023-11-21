@@ -19,7 +19,7 @@ const User = ({ img, name, msg, time , id}) => {
   return (
     <GestureHandlerRootView style={styles.rootView}>
       <Swipeable  renderRightActions={rightSwipe} overshootRight={false}>
-      <TouchableWithoutFeedback onPress={() => navigation.navigate('Chat',{chatId:id}) }>
+      <TouchableWithoutFeedback onPress={() => {navigation.navigate('Chat',{chatId:id}) } }>
         <View style={styles.container}>
           <View style={styles.userInfoContainer}>
             <Image style={styles.userImage} source={{ uri: img }} />

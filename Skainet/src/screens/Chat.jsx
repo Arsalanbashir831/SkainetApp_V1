@@ -51,14 +51,16 @@ const Chat = ({route}) => {
       setTypingAnimation(true)
     }
     // console.log("-----",genType);
-    if (ws.readyState === 0) {
+    if (ws.readyState != WebSocket.OPEN) {
       ws.onopen = () => {
         ws.send(
           sendMessage(genType, inputMsg, sender?.userDetails?.id, chatId),
         );
       };
     } else {
-      console.error('WebSocket is not open. Message not sent.');
+      ws.send(
+        sendMessage(genType, inputMsg, sender?.userDetails?.id, chatId),
+      );
     }
     setInputMsg("")
     

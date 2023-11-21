@@ -23,7 +23,6 @@ const useFetchChat = (authToken) => {
         if (response) {
           
           setChatData(response);
-          // console.log("---------------",response?.chats[0]?.collaborators);
           setCollaborator(response?.chats[0]?.collaborators)
           setIsLoading(false);
         }
@@ -35,7 +34,7 @@ const useFetchChat = (authToken) => {
     };
     fetchChatData();
     
-  }, [authToken]);
+  }, [authToken,chatData]);
 
  
   return { chatData, Collaborator,isLoading, error };
