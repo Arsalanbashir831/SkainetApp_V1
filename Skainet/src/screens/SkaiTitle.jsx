@@ -49,7 +49,7 @@ const SkaiTitle = () => {
       console.log('WebSocket message received:', response);
       setSocketData(response.message);
       setLoading(false); // Set loading to false when chat is created
-      navigation.navigate('ChatListBottom');
+      navigation.reset({ index: 1, routes: [{ name: "ChatListBottom" }] });
     };
 
     ws.onerror = (error) => {

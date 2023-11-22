@@ -39,7 +39,7 @@ const handleLogin = async () => {
     const response = await axios.post(
       "https://api.ilmoirfan.com/auth/login",
       {
-        email: authData.email,
+        email: authData.email.toLowerCase(),
         password: authData.password,
       }
     );

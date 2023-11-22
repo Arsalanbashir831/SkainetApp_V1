@@ -4,20 +4,23 @@ import React, { useEffect,useState } from 'react';
 import Picture from 'react-native-vector-icons/AntDesign';
 import useFetchChat from '../CustomHooks/FetchChat';
 import useGetUserToken from '../CustomHooks/GetUserToken';
+// import useUserDetails from '../CustomHooks/GetUserDetails';
 
-const Generation = ({ onSelectGeneration , onSelectCollaborators ,chatId}) => {
+const Generation = ({ onSelectGeneration , onSelectCollaborators ,chatId ,wordsCredit,ImageCredit,planType }) => {
  
   const token = useGetUserToken();
   const {chatData, isLoading} = useFetchChat(token);
+  // const {userDetails} = useUserDetails(token)
   const [filteredChatData, setFilteredChatData] = useState(null);
   const findChatById = () => {
     setFilteredChatData(chatData?.chats?.filter(chat => chat.id === chatId)[0]);
   };
+  const role =filteredChatData?.role
   useEffect(() => {
     findChatById();
   }, [chatData]);
 
- 
+
  
   const generationType = [
     {
@@ -27,12 +30,18 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators ,chatId}) => {
       height: 40,
       icon: '',
       border: true,
+      isEnable:(planType==="Free Plan" && role==='Owner') ?
+      (wordsCredit>0)  ?true:false
+      :true      
     },
     {
       name: 'IMAGE',
       img: '',
       icon: 'picture',
       border: false,
+      isEnable:(planType==="Free Plan" && role==='Owner') ?
+      (ImageCredit>0)  ?true:false
+      :true
     },
   ];
 
@@ -85,7 +94,7 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators ,chatId}) => {
 
       <View style={{ marginTop: 20 }}>
         {generationType.map((element, index) => (
-          <TouchableOpacity
+          <TouchableOpacity disabled={!element.isEnable}
             style={{
               paddingHorizontal: 10,
               borderBottomWidth: element.border ? 1 : 0,
@@ -104,7 +113,8 @@ const Generation = ({ onSelectGeneration , onSelectCollaborators ,chatId}) => {
                 gap: 20,
               }}
             >
-              <Text style={{ fontSize: 18, color: 'white' }}>{element.name}</Text>
+            <Text style={{ fontSize: 18, color: element.isEnable ? "white" : "gray" }}>{element.name}</Text>
+
               {element.img !== '' ? (
                 <Image style={{ height: element.width, width: element.height }} source={element.img} />
               ) : (

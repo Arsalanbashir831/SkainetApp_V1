@@ -7,7 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import ChatListHeader from '../components/ChatListHeader';
 import {skaiDark} from '../styles/Theme';
@@ -25,6 +25,7 @@ const ChatList = () => {
     chat.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   
+
 
   return (
     <>

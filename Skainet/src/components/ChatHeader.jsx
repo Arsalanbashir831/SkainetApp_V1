@@ -67,7 +67,7 @@ const ChatHeader = ({chatId}) => {
         img:'https://i.ibb.co/vBN55yc/ball.png',
       })}>
         <View>
-          <Text style={{fontWeight: 'bold', fontSize: 17}}>{filteredChatData?.title.slice(0,27)}</Text>
+          <Text style={{fontWeight: 'bold', fontSize: 17,color:"white"}}>{filteredChatData?.title.slice(0,27)}</Text>
           <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
             {filteredChatData?.collaborators ? (
               <>

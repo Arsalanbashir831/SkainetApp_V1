@@ -14,7 +14,7 @@ const OnBoard = ({navigation}) => {
         <Image source={require('../../assets/DemoChat.png')} />
       </View>
       <View style={{ backgroundColor: '#26262E', paddingVertical: 50 }}>
-        <Text style={{ fontSize: 28, paddingHorizontal: 25 }}>
+        <Text style={{ fontSize: 28, paddingHorizontal: 25 ,color:'white'}}>
           AI-Powered Chat for loved ones and colleagues
         </Text>
         <TouchableOpacity onPress={()=>(navigation.navigate('Signup'))} style={{marginVertical:20 , width:'80%' , alignSelf:'center'}}>

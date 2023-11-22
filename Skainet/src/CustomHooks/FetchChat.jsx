@@ -34,7 +34,7 @@ const useFetchChat = (authToken) => {
     };
     fetchChatData();
     
-  }, [authToken,chatData]);
+  }, [authToken]);
 
  
   return { chatData, Collaborator,isLoading, error };

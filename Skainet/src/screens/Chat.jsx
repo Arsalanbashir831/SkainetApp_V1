@@ -23,7 +23,7 @@ import useUserDetails from '../CustomHooks/GetUserDetails';
 import useGetUserToken from '../CustomHooks/GetUserToken';
 import FetchMessage from '../Websocket/FetchMessage';
 
-import Message from '../components/TextMessage';
+import Message from '../components/Message';
 import sendMessage from '../Websocket/SendMessage';
 import useFetchChat from '../CustomHooks/FetchChat';
 
@@ -242,6 +242,7 @@ const getCollaborator=()=>{
         msg={msg?.message}
         name={msg?.sender_details?.full_name}
         type={msg?.type}
+        sendTo ={msg?.sender_details?.sent_to?.full_name}
       />
     </React.Fragment>
   );
@@ -284,7 +285,9 @@ const getCollaborator=()=>{
           onSelectCollaborators={handleCollaborators}
           collaborators ={Collaborator}
           chatId={chatId}
-          
+          wordsCredit={sender?.userDetails?.credits}
+          ImageCredit={sender?.userDetails?.images}
+          planType={sender?.userDetails?.plan}
         />
       ) : null}
       <View style={styles.inputContainer}>

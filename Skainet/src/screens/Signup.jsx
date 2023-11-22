@@ -48,7 +48,7 @@ const Signup = ({ navigation }) => {
       const response = await axios.post(
         'https://api.ilmoirfan.com/auth/email-signup',
         {
-          email: userData.email,
+          email: userData.email.toLowerCase(),
           first_name: userData.firstName,
           last_name: userData.lastName,
           password: userData.password,
@@ -94,12 +94,14 @@ const Signup = ({ navigation }) => {
                 onChangeText={(text) => handlcChange(text, 'firstName')}
                 name='firstName'
                 placeholder='First Name'
+                placeholderTextColor={"white"}
                 style={{ width: '48%', borderWidth: 1, borderRadius: 10, padding: 10, borderColor: '#69698C66', backgroundColor: "#00000040", color: 'white' }}
               />
               <TextInput
                 value={userData.lastName}
                 onChangeText={(text) => handlcChange(text, 'lastName')}
                 placeholder='Last Name'
+                placeholderTextColor={"white"}
                 style={{ width: '48%', borderWidth: 1, borderRadius: 10, padding: 10, borderColor: '#69698C66', backgroundColor: "#00000040", color: 'white' }}
               />
             </View>
@@ -108,6 +110,7 @@ const Signup = ({ navigation }) => {
               onChangeText={(text) => handlcChange(text, 'email')}
               name='email'
               placeholder='Email'
+              placeholderTextColor={"white"}
               style={{ borderWidth: 1, borderRadius: 10, padding: 10, borderColor: '#69698C66', backgroundColor: "#00000040", color: 'white' }}
             />
             <View style={{ display: 'flex', flexDirection: 'row', flexGrow: 1, gap: 10 }}>
@@ -118,6 +121,7 @@ const Signup = ({ navigation }) => {
                   name='password'
                   secureTextEntry={isPasswordVisible}
                   placeholder='Password'
+                  placeholderTextColor={"white"}
                   style={{ width: '80%', padding: 10, color: 'white' }}
                 />
                 <Icon onPress={handlePasswordVisibility} name={isPasswordVisible ? 'eye-off' : 'eye'} color={'white'} size={17} />
