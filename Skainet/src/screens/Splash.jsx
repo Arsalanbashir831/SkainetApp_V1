@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, DevSettings } from 'react-native';
 import React,{useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import skaiGradientTheme  from '../styles/Theme';
@@ -17,7 +17,12 @@ const {ServerResponse} = useUserDetails(token)
     console.log(ServerResponse);
     if (ServerResponse===200) {
       navigation.navigate('ChatListBottom')
-    }else{
+      // DevSettings.reload()
+    }
+    else if (ServerResponse===500) {
+      DevSettings.reload()
+    }
+    else{
       navigation.navigate('OnBoard')
     }
     }, 5000);

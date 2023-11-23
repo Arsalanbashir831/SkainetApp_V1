@@ -75,10 +75,10 @@ const ChatHeader = ({chatId}) => {
                   .slice(0, 2)
                   .map((friend, index) => (
                     <React.Fragment key={index}>
-                      <Text>{friend.full_name},</Text>
+                      <Text style={{color:'white'}}>{friend.full_name},</Text>
                     </React.Fragment>
                   ))}
-                <Text>...</Text>
+                <Text style={{color:'white'}}>...</Text>
               </>
             ) : (
               null

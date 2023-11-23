@@ -62,14 +62,7 @@ const ChatListHeader = () => {
           <Text  style={styles.popupMenuItem}>New Chat</Text>
           <AddUserIcon name='adduser' size={17} color='white'></AddUserIcon>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={{display:'flex',flexDirection:'row' , alignItems:'center' , justifyContent:'space-around'}} onPress={()=>{setMenuVisible(false); navigation.navigate("Invite")}} >
-          <Text style={styles.popupMenuItem}>New Group</Text>
-          <AddUserGroupIcon  name='addusergroup' size={17} color='white'></AddUserGroupIcon>
-        </TouchableOpacity>
-        <TouchableOpacity style={{display:'flex',flexDirection:'row' , alignItems:'center' , justifyContent:'space-around' , gap:10}} onPress={()=>{setMenuVisible(false); navigation.navigate("SkaiTitle")}}>
-          <Text style={styles.popupMenuItem}>Chat With SKAI</Text>
-          <Image style={{height:17 , width:17}} source={require('../../assets/ball_resize.png')}></Image>
-        </TouchableOpacity> */}
+      
         </Animated.View>
       )}
     </View>

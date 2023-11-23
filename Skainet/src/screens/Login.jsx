@@ -80,14 +80,15 @@ const closeModal = async () => {
           <TextInput
               value={authData.email}
               onChangeText={(text) => handlcChange(text, 'email')}
-              style={{backgroundColor:'#00000040' , padding:10 , borderColor:'#69698C66' , backgroundColor:"#00000040",borderWidth:1 , borderRadius:10 }}
+              style={{backgroundColor:'#00000040' , padding:10 , borderColor:'#69698C66' , backgroundColor:"#00000040",borderWidth:1 , borderRadius:10 ,color:'white'}}
               placeholder="Email"
+              placeholderTextColor={"white"}
             />
            <View style={{width:'100%', display:'flex' , flexDirection:'row' , alignItems:'center' , borderColor:'#69698C66' , backgroundColor:"#00000040",borderWidth:1 , borderRadius:10 }}>
         <TextInput 
         value={authData.password}
         onChangeText={(text) => handlcChange(text, 'password')}
-        secureTextEntry={true} placeholder='Password' style={{ width:'90%',   padding:10,color:'white'}}/>
+        secureTextEntry={true} placeholder='Password' placeholderTextColor={"white"} style={{ width:'90%',   padding:10,color:'white'}}/>
       <Icon  name='eye' color={'white'} size={17}/>
        </View>
        

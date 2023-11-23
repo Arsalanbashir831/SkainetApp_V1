@@ -8,6 +8,7 @@ import CreateNewRoom from '../Websocket/CreateNewRoom';
 import useUserDetails from '../CustomHooks/GetUserDetails';
 import useGetUserToken from '../CustomHooks/GetUserToken';
 import { useNavigation } from '@react-navigation/native';
+import useFetchChat from '../CustomHooks/FetchChat';
 
 const SkaiTitle = () => {
   const navigation = useNavigation();
@@ -15,6 +16,7 @@ const SkaiTitle = () => {
   const [loading, setLoading] = useState(false);
   const token = useGetUserToken();
   const { userDetails } = useUserDetails(token);
+  const {chatData}=useFetchChat(token)
   const [socketData, setSocketData] = useState(null);
   const senderId = userDetails?.id;
 
@@ -49,8 +51,11 @@ const SkaiTitle = () => {
       console.log('WebSocket message received:', response);
       setSocketData(response.message);
       setLoading(false); // Set loading to false when chat is created
-      navigation.reset({ index: 1, routes: [{ name: "ChatListBottom" }] });
+      // navigation.reset({ index: 1, routes: [{ name: "ChatListBottom" }] });
+      // console.log(chatData);
+     navigation.navigate('ChatListBottom')
     };
+    
 
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);

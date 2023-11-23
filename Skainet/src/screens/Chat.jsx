@@ -29,6 +29,7 @@ import useFetchChat from '../CustomHooks/FetchChat';
 
 const Chat = ({route}) => {
   const chatId = route.params.chatId;
+  const role =route.params.role
   const token = useGetUserToken();
   const sender = useUserDetails(token);
   const {Collaborator} = useFetchChat(token)
@@ -89,13 +90,10 @@ const getCollaborator=()=>{
     };
 
     ws.onmessage = e => {
-      
       setLoading(false);
-     
-  
-     
       try {
         const response = JSON.parse(e.data);
+        
         
         if (response && response.message === undefined) {
          
@@ -111,8 +109,6 @@ const getCollaborator=()=>{
           ]);
          setTypingAnimation(false)
         }
-        
-        
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
@@ -121,7 +117,10 @@ const getCollaborator=()=>{
         console.log(e.message);
       };
 
-     
+      return () => {
+        ws.close();
+        console.log('WebSocket connection closed');
+      };
     };
   },[])
   
@@ -288,6 +287,7 @@ const getCollaborator=()=>{
           wordsCredit={sender?.userDetails?.credits}
           ImageCredit={sender?.userDetails?.images}
           planType={sender?.userDetails?.plan}
+          role={role}
         />
       ) : null}
       <View style={styles.inputContainer}>
@@ -308,6 +308,7 @@ const getCollaborator=()=>{
           style={getTextInputStyle()}
           multiline={true} // set multiline to true
           placeholder="Enter Message"
+          placeholderTextColor={'white'}
         />
 
         {inputMsg.length === 0 ? (

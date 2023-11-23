@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { DevSettings } from "react-native";
 
 function useUserDetails(authToken) {
   const [userDetails, setUserDetails] = useState(null);

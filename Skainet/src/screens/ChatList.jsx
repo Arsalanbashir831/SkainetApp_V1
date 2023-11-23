@@ -15,7 +15,7 @@ import User from '../components/User';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import useFetchChat from '../CustomHooks/FetchChat';
 import useGetUserToken from '../CustomHooks/GetUserToken';
-
+import { useFocusEffect } from '@react-navigation/native'; 
 const ChatList = () => {
   const token = useGetUserToken();
 
@@ -24,9 +24,8 @@ const ChatList = () => {
   const filteredChats = chatData?.chats?.filter(chat =>
     chat.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
   
-
-
   return (
     <>
       <LinearGradient
@@ -41,13 +40,15 @@ const ChatList = () => {
             style={{position: 'absolute', top: 15, left: 20}}
             name="search"
             size={20}
-            colors="white"></Icon>
+            color="white"></Icon>
           <TextInput
             onChangeText={text => setSearchQuery(text)}
+            placeholderTextColor={"gray"}
             style={{
               backgroundColor: '#3D3F4780',
               borderRadius: 8,
               paddingHorizontal: 40,
+              color:'white'
             }}
             placeholder="Search"
           />
@@ -65,6 +66,7 @@ const ChatList = () => {
                 msg={item.role}
                 time=""
                 id={item.id}
+                
               />
             )}
           />
