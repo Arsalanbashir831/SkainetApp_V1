@@ -53,7 +53,7 @@ const ChatHeader = ({chatId}) => {
           gap: 20,
           paddingVertical: 15,
         }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.navigate('ChatListBottom')}>
           <Icon name="arrowleft" size={22} color="white" />
         </TouchableOpacity>
         <Image

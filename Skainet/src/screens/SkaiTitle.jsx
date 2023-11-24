@@ -51,7 +51,9 @@ const SkaiTitle = () => {
       console.log('WebSocket message received:', response);
       setSocketData(response.message);
       setLoading(false); 
-     navigation.navigate('ChatListBottom')
+      if (response.command==='title_update') {    
+        navigation.navigate('Chat',{chatId:response.chat_id,role:"Owner"})
+      }
     };
     
 
