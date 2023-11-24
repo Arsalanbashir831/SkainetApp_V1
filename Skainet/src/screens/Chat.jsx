@@ -28,8 +28,8 @@ import sendMessage from '../Websocket/SendMessage';
 import useFetchChat from '../CustomHooks/FetchChat';
 
 const Chat = ({route}) => {
-  const chatId = route.params.chatId;
-  const role =route.params.role
+  
+  const {chatId,role} =route.params
   const token = useGetUserToken();
   const sender = useUserDetails(token);
   const {Collaborator} = useFetchChat(token)
@@ -43,7 +43,7 @@ const Chat = ({route}) => {
   const [loading, setLoading] = useState(true);
   const [typingAnimation , setTypingAnimation] = useState(false)
   const scrollViewRef = useRef(null);
-// console.log(Collaborator);
+
   const ws = new WebSocket(`wss://api.ilmoirfan.com/ws/chat/${chatId}/`);
 
   const SendMessage = () => {
@@ -51,7 +51,7 @@ const Chat = ({route}) => {
     if (genType!='') {
       setTypingAnimation(true)
     }
-    // console.log("-----",genType);
+ 
     if (ws.readyState != WebSocket.OPEN) {
       ws.onopen = () => {
         ws.send(
@@ -113,7 +113,7 @@ const getCollaborator=()=>{
         console.error('Error parsing WebSocket message:', error);
       }
       ws.onerror = e => {
-        // an error occurred
+ 
         console.log(e.message);
       };
 

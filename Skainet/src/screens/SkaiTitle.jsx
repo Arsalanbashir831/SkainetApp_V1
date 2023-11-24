@@ -50,9 +50,7 @@ const SkaiTitle = () => {
       const response = JSON.parse(event.data);
       console.log('WebSocket message received:', response);
       setSocketData(response.message);
-      setLoading(false); // Set loading to false when chat is created
-      // navigation.reset({ index: 1, routes: [{ name: "ChatListBottom" }] });
-      // console.log(chatData);
+      setLoading(false); 
      navigation.navigate('ChatListBottom')
     };
     
@@ -68,7 +66,6 @@ const SkaiTitle = () => {
     setLoading(true);
  
   };
-
 
   return (
     <>
