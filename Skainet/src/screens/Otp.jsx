@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput,ActivityIndicator } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
  import {skaiGradientTheme} from '../styles/Theme'; // You may need to adjust the path for skaiGradientTheme
 import GradientButton from '../components/GradientButton';
