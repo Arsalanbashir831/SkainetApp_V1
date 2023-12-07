@@ -32,7 +32,7 @@ const Chat = ({route}) => {
   const {chatId,role} =route.params
   const token = useGetUserToken();
   const sender = useUserDetails(token);
-  const {Collaborator} = useFetchChat(token)
+  const {Collaborator,chatData} = useFetchChat(token)
 
   const [inputMsg, setInputMsg] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -42,6 +42,7 @@ const Chat = ({route}) => {
   const [socketData, setSocketData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [typingAnimation , setTypingAnimation] = useState(false)
+  const [filteredChatData, setFilteredChatData] = useState(null);
   const scrollViewRef = useRef(null);
 
   const ws = new WebSocket(`wss://api.ilmoirfan.com/ws/chat/${chatId}/`);
@@ -224,6 +225,7 @@ const getCollaborator=()=>{
       paddingRight: 40,
     };
   };
+
 
   const isSender = sender => (sender === 'OpenAI' ? 'OpenAI' : 'Collaborator');
   const renderTextMessage = (msg, index) => (

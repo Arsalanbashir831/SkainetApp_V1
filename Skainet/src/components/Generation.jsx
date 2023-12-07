@@ -14,24 +14,15 @@ const Generation = ({
   planType,
   collaborators,role
 }) => {
-  // const token = useGetUserToken();
-  // const {chatData, isLoading} = useFetchChat(token);
-
-  // const [filteredChatData, setFilteredChatData] = useState(null);
-  // const findChatById = () => {
-  //   setFilteredChatData(chatData?.chats?.filter(chat => chat.id === chatId)[0]);
-  // };
-  // const role = filteredChatData?.role;
-  // useEffect(() => {
-  //   findChatById();
-  // }, []);
-
-  // console.log(wordsCredit);
-  console.log(role);
-setTimeout(()=>{
-  return collaborators
-},1000)
-
+  const [filteredChatData, setFilteredChatData] = useState(null);
+  const token = useGetUserToken();
+  const {chatData} = useFetchChat(token)
+  const findChatById = () => {
+    setFilteredChatData(chatData?.chats?.filter(chat => chat.id === chatId)[0]);
+  };
+  useEffect(() => {
+    findChatById();
+  }, [chatData]);
 
 
 
@@ -94,7 +85,7 @@ setTimeout(()=>{
         Collaborator
       </Text>
       <ScrollView style={{padding: 10}}>
-        {collaborators?.map((element, index) => {
+        {filteredChatData?.collaborators.map((element, index) => {
           return (
             <TouchableOpacity
               style={{
